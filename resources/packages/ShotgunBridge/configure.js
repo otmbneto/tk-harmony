@@ -1189,6 +1189,79 @@ function Engine()
         return result;
     }
 
+    self.getSubNodesByType = function(root,type)
+    {
+        //verifica se ha algum animatic na cena e retorna ele
+        var sub_nodes = node.subNodes(root);
+        var read_nodes = [];
+        for(var i = 0; i < sub_nodes.length; i++){
+          if(node.type(sub_nodes[i]) == type){
+            read_nodes.push(sub_nodes[i]);
+          }     
+        }
+
+        return read_nodes;
+    }
+
+
+    //clean any garbage kept by importAnimatic
+    self.clean_animatic_cache = function(){
+
+        var temp_folder = specialFolders.temp;
+        var regex_columName = /(ATV-\w{16})$/;
+        var list_folders = list_files(temp_folder, "*");
+        var progressDlg;
+        progressDlg = new QProgressDialog();
+        progressDlg.open();
+        progressDlg.setRange(0, list_folders.length -1);
+
+        var count = 0;
+        for(var i=0; i<list_folders.length; i++){
+
+            progressDlg.setValue(i);
+            progressDlg.setLabelText("Cleaning temp folder...\n" + list_folders[i]);
+            if(regex_columName.test(list_folders[i])){
+                var to_delete = temp_folder + "/" + list_folders[i];
+                MessageLog.trace("Trash found: " + list_folders[i]);
+                if(removeDirs(to_delete)){
+                    count++;
+                }
+            }
+        }
+
+        progressDlg.hide();
+        MessageBox.information("Cache cleaned!! " + count + " folders deleted!");
+
+    }
+
+    self.sg_import_animatic = function(data)
+    {
+        scene.beginUndoRedoAccum("Import Animatic");
+        var movie_file = data.animatic;
+        var node_path = data.node_path;
+        var status = false;
+
+        if(node.getName(node_path) == ""){
+            MessageBox.information("ERROR! Group not found : " + node_path);
+        }
+        else{
+
+            var animatic = import_movie(movie_file, node_path);
+            if(node.getName(animatic) != ""){
+                MessageBox.information("Animatic imported sucessfully!");
+                status = true;
+            } 
+            else {
+                MessageBox.information("Failed to import the animatic!");
+            }
+        }
+      
+        self.clean_animatic_cache();
+        scene.endUndoRedoAccum();
+
+        return status;
+    }
+
     self.import_clip = function(data)
     {
         scene.beginUndoRedoAccum("Import Movie");
@@ -1288,6 +1361,245 @@ function Engine()
     }
 
 
+    self.sg_node_is_group = function(data){
+
+      var n = data.node;
+      return node.isGroup(n);
+
+    }
+
+    self.sg_node_get_name = function(data){
+
+      var n = data.node;
+      return node.getName(n);
+      
+    }
+
+    self.sg_node_type = function(data){
+
+      var n = data.node;
+      return node.type(n);
+      
+    }
+
+    self.sg_number_of_subnodes = function(data){
+
+        var parent = data.parent;
+        return node.numberOfSubNodes(parent);
+      
+    }   
+
+    self.sg_node_subnodes = function(data){
+
+        var parent = data.parent;
+        return node.subNodes(parent);
+
+    }
+
+    self.sg_node_add_composite_to_group = function(data){
+
+        var n = data.node;
+        return node.addCompositeToGroup(n);
+
+    }
+
+    self.sg_node_subnode = function(data){
+
+        var parent = data.parent;
+        var index = data.index;
+        return node.subNode(parent,index);
+
+    }
+
+    self.sg_node_subnode_by_name = function(data){
+
+        var parent = data.parent;
+        var name = data.name;
+        return node.subNodeByName(parent,name);
+    }
+
+    self.sg_node_parent_node = function(data){
+
+        var n = data.node;
+        return node.parentNode(n);
+    }
+
+    self.sg_node_no_node = function(data){
+        return node.noNode();
+    }
+
+    self.sg_node_equals = function(data){
+
+        var n1 = data.node1;
+        var n2 = data.node2;
+        return node.equals(n1,n2);
+
+    }
+
+    self.sg_node_get_text_attr = function(data){
+
+        var n = data.node;
+        var frame = data.frame;
+        var attr = data.attr;
+        return node.getTextAttr(n,frame,attr);
+
+    }
+
+    self.sg_node_get_attr = function(data){
+
+
+    }
+
+    self.sg_node_get_attr_list = function(data){
+
+
+    }
+
+
+    self.sg_node_get_all_attr_names = function(data){
+
+        var n = data.node;
+        return node.getAllAttrNames(n);
+
+    }
+
+    self.sg_node_get_all_attr_keywords = function(data){
+
+        var n = data.node;
+        return node.getAllAttrKeywords(n);
+        
+    }
+
+    self.sg_node_linked_column = function(data){
+
+        var n = data.node;
+        var attr = data.attr;
+        return node.linkedColumn(n,attr);
+
+    }
+
+    self.sg_node_coord_x = function(data){
+
+        var n = data.node;
+        return node.coordX(n);
+
+    }
+
+    self.sg_node_coord_y = function(data){
+
+        var n = data.node;
+        return node.coordY(n);
+        
+    }
+
+    self.sg_node_coord_z = function(data){
+
+        var n = data.node;
+        return node.coordZ(n);
+        
+    }
+
+    self.sg_node_width = function(data){
+
+        var n = data.node;
+        return node.width(n);
+
+    }
+
+    self.sg_node_height = function(data){
+
+        var n = data.node;
+        return node.height(n);
+
+    }
+
+    self.sg_node_set_coord = function(data){
+
+        var n = data.node;
+        var coords = data.coords;
+
+        if(coords.length == 3){
+            return node.setCoord(n,coords[0],coords[1],coords[2]);
+        }
+        else{
+            return node.setCoord(n,coords[0],coords[1]);
+        }
+
+    }
+
+    self.sg_node_number_of_input_ports = function(data){
+
+        var n = data.node;
+        return node.numberOfInputPorts(n);
+
+    }
+
+    self.sg_node_is_linked = function(data){
+
+        var n = data.node;
+        var port = data.port;
+        return node.isLinked(n,port);
+    
+    }
+
+    self.sg_node_src_node = function(data){
+
+        var n = data.node;
+        var port = data.port;
+        return node.srcNode(n,port);
+    
+    }
+
+    self.sg_node_flat_src_node = function(data){
+
+        var n = data.node;
+        var port = data.port;
+        return node.flatSrcNode(n,port);
+    
+    }
+
+    self.sg_node_src_node_info = function(data){
+
+
+
+    }
+
+    self.sg_node_number_of_output_ports = function(data){
+
+        var n = data.node;
+        return node.numberOfOutputPorts(n);
+
+    }
+
+    self.sg_node_number_of_output_links = function(data){
+
+        var n = data.node;
+        var port = data.port
+        return node.numberOfOutputLinks(n,port);
+
+    }     
+
+    self.sg_node_dst_node = function(data){
+
+        var n = data.node;
+        var port = data.port;
+        var link = data.link;
+        return node.dstNode(n,port,link);
+    
+    }
+
+    self.sg_node_dst_node_info = function(data){
+
+
+
+    }
+
+    self.sg_node_group_at_network_building = function(data){
+
+        var n = data.node;
+        return node.groupAtNetworkBuilding(n);
+    
+    } 
 
     // ------------------------------------------------------------------------
 
@@ -1301,6 +1613,23 @@ function Engine()
     self.register_callbacks = function()
     {
         //self.registerCallback("SHOW_MENU",   self.show_menu);
+
+        //about module
+        self.registerCallback("SG_ABOUT_IS_WINDOWS_ARCH",about.isWindowsArch);
+        self.registerCallback("SG_ABOUT_IS_LINUX_ARCH",about.isLinuxArch);
+        self.registerCallback("SG_ABOUT_IS_MAC_ARCH",about.isMacArch);
+        self.registerCallback("SG_ABOUT_IS_MAC_INTEL_ARCH",about.isMacIntelArch);
+        self.registerCallback("SG_ABOUT_IS_MAC_PPC_ARCH",about.isMacPpcArch);
+        self.registerCallback("SG_ABOUT_GET_APPLICATION_PATH",about.getApplicationPath);
+        self.registerCallback("SG_ABOUT_GET_BINARY_PATH",about.getBinaryPath);
+        self.registerCallback("SG_ABOUT_GET_RESOURCES_PATH",about.getResourcesPath);
+        //node module
+        self.registerCallback("SG_NODE_ROOT",node.root);
+        self.registerCallback("SG_NODE_IS_GROUP",self.sg_node_is_group);
+        self.registerCallback("SG_NODE_GET_NAME",self.sg_node_get_name);
+        self.registerCallback("SG_NODE_TYPE",self.sg_node_type);
+        self.registerCallback("SG_NODE_NUMBER_OF_SUB_NODES",self.sg_number_of_subnodes);
+
         self.registerCallback("LOG_INFO",       log_info);
         self.registerCallback("LOG_WARNING",    log_warning);
         self.registerCallback("LOG_DEBUG",      log_debug);

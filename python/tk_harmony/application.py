@@ -11,6 +11,10 @@ from itertools import chain
 
 from .client import QTcpSocketClient
 from .utils import copy_tree, normpath, Cached
+import sys
+import os
+import shutil
+from os.path import expanduser
 
 
 __author__ = "Diego Garcia Huerta"
@@ -18,10 +22,96 @@ __contact__ = "https://www.linkedin.com/in/diegogh/"
 
 
 class Application(QTcpSocketClient):
+    
     def __init__(self, engine, parent=None, host=None, port=None):
         super(Application, self).__init__(parent=parent, host=host, port=port)
         self.engine = engine
         self.engine.logger.debug("Started Application: %s" % self)
+
+        self.about = self.About(self)
+        self.node = self.Node(self)
+        self.birdo = self.Birdo(self)
+        self.extension = self.Extension(self)
+
+
+    class Extension:
+
+        def __init__(self,parent):
+
+            self.app = parent
+
+        def import_templates(self,templates):
+            for template in templates:
+                self.import_template(template)
+
+        def import_template(self,template):
+            success = self.app.send_and_receive_command("SG_IMPORT_TEMPLATE",template=template)
+            return success        
+
+    class About:
+
+        def __init__(self,parent):
+
+            self.app = parent
+
+        def isWindowsArch(self):
+
+            result = self.app.send_and_receive_command("SG_ABOUT_IS_WINDOWS_ARCH")
+            return result
+
+        def isLinuxArch(self):
+
+            return self.app.send_and_receive_command("SG_ABOUT_IS_LINUX_ARCH")
+
+        def isMachArch(self):
+
+            return self.app.send_and_receive_command("SG_ABOUT_IS_MAC_ARCH")
+
+        def isMacIntelArch(self):
+
+            return self.app.send_and_receive_command("SG_ABOUT_IS_MAC_INTEL_ARCH")
+
+        def isMacPpcArch(self):
+
+            return self.app.send_and_receive_command("SG_ABOUT_IS_MAC_PPC_ARCH")
+
+        def getApplicationPath(self):
+
+            return self.app.send_and_receive_command("SG_ABOUT_GET_APPLICATION_PATH")
+
+        def getBinaryPath(self):
+
+            return self.app.send_and_receive_command("SG_ABOUT_GET_BINARY_PATH")
+
+        def getResourcesPath(self):
+
+            return self.app.send_and_receive_command("SG_ABOUT_GET_RESOURCES_PATH")
+
+    class Node:
+
+        def __init__(self,parent):
+
+            self.app = parent
+
+        def root(self):
+
+            return self.app.send_and_receive_command("SG_NODE_ROOT")
+
+        def isGroup(self,node):
+
+            return self.app.send_and_receive_command("SG_NODE_IS_GROUP",node=node)
+
+        def getName(self,node):
+
+            return self.app.send_and_receive_command("SG_NODE_GET_NAME",node=node)
+
+        def type(self,node):
+
+            return self.app.send_and_receive_command("SG_NODE_TYPE",node=node)
+
+        def numberOfSubNodes(self,parent):
+
+            return self.app.send_and_receive_command("SG_NODE_NUMBER_OF_SUB_NODES",parent=parent)
 
     def connect(self):
         while not self.is_connected():
@@ -30,6 +120,20 @@ class Application(QTcpSocketClient):
 
     def broadcast_event(self, event_name):
         self.send_command(event_name)
+
+    #Put here stuff you want to do before the menu is ready to use.
+    def before_engine_is_ready(self):
+        self.cleanTaskCache()        
+        return True
+
+    def after_engine_is_ready(self):
+
+        return True
+
+    def engine_is_ready(self):
+
+        result = self.send_and_receive_command("ENGINE_READY")
+        return result
 
     def log_info(self, message):
         self.send_command("LOG_INFO", message=message)
@@ -55,6 +159,21 @@ class Application(QTcpSocketClient):
         return self._app_version
 
     get_application_version = Cached(get_application_version)
+
+
+    def pre_publish(self):
+    
+        self.send_command("SG_PRE_PUBLISH")
+
+    def sg_import_psd(self,asset,index):
+
+        success = self.send_and_receive_command("SG_IMPORT_PSD",psd=asset,index=index)
+        
+        return success
+
+    def sg_import_animatic(self,animatic):
+        success = self.send_and_receive_command("SG_IMPORT_ANIMATIC",animatic=animatic)
+        return success
 
     def get_current_project_path(self):
         current_path = self.send_and_receive_command("GET_CURRENT_PROJECT_PATH")
@@ -91,6 +210,7 @@ class Application(QTcpSocketClient):
         if current_path:
             current_path = normpath(str(current_path))
 
+        #self.cleanTaskCache()
         return current_path
 
     def is_startup_project(self):
@@ -201,6 +321,43 @@ class Application(QTcpSocketClient):
         We expose this function here for the hooks to take advantage of it
         """
         copy_tree(*args, **kwargs)
+
+    def getTempTaskFolder(self):
+        import sgtk
+        """
+        Returns a parent directory path
+        where persistent application data can be stored.
+
+        # linux: ~/.local/share
+        # macOS: ~/Library/Application Support
+        # windows: C:/Users/<USER>/AppData/Roaming
+        """
+
+        if "SHOTGUN_HOME" in os.environ.keys() and os.environ["SHOTGUN_HOME"] != "":
+            home = os.environ["SHOTGUN_HOME"]
+        else:
+            home = expanduser("~")
+            dirs = ""
+            if sys.platform == "win32":
+                dirs = "AppData/Roaming/"
+            elif sys.platform == "linux":
+                dirs =".shotgun"
+            elif sys.platform == "darwin":
+                dirs = "Library/Caches/"
+
+        project = sgtk.platform.current_engine().context.project["name"].lower()
+        shotgun_folder = "Shotgun/{0}/site/fw-shotgunutils/sg/".format(project)
+        home = os.path.join(home,dirs,shotgun_folder).replace("\\","/")
+
+        return home
+
+    def cleanTaskCache(self):
+
+        cache_folder = self.getTempTaskFolder()
+        if not os.path.exists(cache_folder):
+            return
+        for folder in os.listdir(cache_folder):
+            shutil.rmtree(os.path.join(cache_folder,folder))            
 
     def save_project_as(self, target_file, source_file=None, open_project=True):
         self.engine.logger.debug("Saving project as...")
