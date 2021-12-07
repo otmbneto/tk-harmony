@@ -1424,10 +1424,6 @@ function Engine()
         return node.parentNode(n);
     }
 
-    self.sg_node_no_node = function(data){
-        return node.noNode();
-    }
-
     self.sg_node_equals = function(data){
 
         var n1 = data.node1;
@@ -1516,14 +1512,15 @@ function Engine()
     self.sg_node_set_coord = function(data){
 
         var n = data.node;
-        var coords = data.coords;
+        var x = data.x;
+        var y = data.y;
+        var z = data.z;
 
-        if(coords.length == 3){
-            return node.setCoord(n,coords[0],coords[1],coords[2]);
+        if(z == null){
+            return node.setCoord(n,x,y);
         }
-        else{
-            return node.setCoord(n,coords[0],coords[1]);
-        }
+        
+        return node.setCoord(n,x,y,z);
 
     }
 
@@ -1601,6 +1598,31 @@ function Engine()
     
     } 
 
+    self.sg_node_add = function(data){
+
+        var parent = data.parent;
+        var name = data.name;
+        var type = data.type;
+        var x = data.x;
+        var y = data.y;
+        var z = data.z;
+        return node.add(parent,name,type,x,y,z);
+
+    }
+
+    self.sg_node_get_group_input_module = function(data){
+
+        var parent = data.parentGroup;
+        var name = data.name;
+        var x = data.x;
+        var y = data.y;
+        var z = data.z;
+        return node.getGroupInputModule(parentGroup,name,x,y,z);
+        
+    }
+
+
+
     // ------------------------------------------------------------------------
 
     self.registerCallback = function(command, callback)
@@ -1629,6 +1651,37 @@ function Engine()
         self.registerCallback("SG_NODE_GET_NAME",self.sg_node_get_name);
         self.registerCallback("SG_NODE_TYPE",self.sg_node_type);
         self.registerCallback("SG_NODE_NUMBER_OF_SUB_NODES",self.sg_number_of_subnodes);
+        self.registerCallback("SG_NODE_SUB_NODES",self.sg_node_subnodes);
+        self.registerCallback("SG_NODE_ADD_COMPOSITE_TO_GROUP",self.sg_node_add_composite_to_group);
+        self.registerCallback("SG_NODE_SUBNODE",self.sg_node_subnode);
+        self.registerCallback("SG_NODE_SUBNODE_BY_NAME",self.sg_subnode_by_name);
+        self.registerCallback("SG_NODE_PARENT_NODE",self.sg_node_parent_node);
+        self.registerCallback("SG_NODE_NO_NODE",node.noNode);
+        self.registerCallback("SG_NODE_EQUALS",self.sg_node_equals);
+        self.registerCallback("SG_NODE_GET_TEXT_ATTR",self.sg_node_get_text_attr);
+        self.registerCallback("SG_NODE_GET_ATTR",self.sg_node_get_attr);
+        self.registerCallback("SG_NODE_GET_ATTR_LIST",self.sg_node_get_attr_list);
+        self.registerCallback("SG_NODE_GET_ALL_ATTR_NAMES",self.sg_node_get_all_attr_names);
+        self.registerCallback("SG_NODE_GET_ALL_ATTR_KEYSWORDS",self.sg_node_get_all_attr_keywords);
+        self.registerCallback("SG_NODE_LINKED_COLUMN",self.sg_node_linked_column);
+        self.registerCallback("SG_NODE_COORD_X",self.sg_node_coord_x);
+        self.registerCallback("SG_NODE_COORD_Y",self.sg_node_coord_y);
+        self.registerCallback("SG_NODE_COORD_Z",self.sg_node_coord_z);
+        self.registerCallback("SG_NODE_WIDTH",self.sg_node_width);
+        self.registerCallback("SG_NODE_HEIGHT",self.sg_node_height);
+        self.registerCallback("SG_NODE_SET_COORD",self.sg_node_set_coord);
+        self.registerCallback("SG_NODE_NUMBER_OF_INPUT_PORTS",self.sg_node_number_of_input_ports);
+        self.registerCallback("SG_NODE_IS_LINKED",self.sg_node_is_linked);
+        self.registerCallback("SG_NODE_SRC_NODE",self.sg_node_src_node);
+        self.registerCallback("SG_NODE_FLAT_SRC_NODE",self.sg_node_flat_src_node); 
+        self.registerCallback("SG_NODE_SRC_NODE_INFO",self.sg_node_src_node_info);
+        self.registerCallback("SG_NODE_NUMBER_OF_OUTPUT_PORTS",self.sg_node_number_of_output_ports);
+        self.registerCallback("SG_NODE_NUMBER_OF_OUTPUT_LINKS",self.sg_node_number_of_output_links);
+        self.registerCallback("SG_NODE_DST_NODE",self.sg_node_dst_node);
+        self.registerCallback("SG_NODE_DST_NODE_INFO",self.sg_node_dst_node_info);
+        self.registerCallback("SG_NODE_GROUP_AT_NETWORK_BUILDING",self.sg_node_group_at_network_building);
+        self.registerCallback("SG_NODE_ADD", self.sg_node_add);
+        self.registerCallback("SG_NODE_GET_GROUP_INPUT_MODULE", self.sg_node_get_group_input_module);
 
         self.registerCallback("LOG_INFO",       log_info);
         self.registerCallback("LOG_WARNING",    log_warning);

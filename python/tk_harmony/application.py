@@ -87,6 +87,7 @@ class Application(QTcpSocketClient):
 
             return self.app.send_and_receive_command("SG_ABOUT_GET_RESOURCES_PATH")
 
+
     class Node:
 
         def __init__(self,parent):
@@ -112,6 +113,121 @@ class Application(QTcpSocketClient):
         def numberOfSubNodes(self,parent):
 
             return self.app.send_and_receive_command("SG_NODE_NUMBER_OF_SUB_NODES",parent=parent)
+
+        def subNodes(self,parent):
+
+            return self.app.send_and_receive_command("SG_NODE_SUB_NODES",parent=parent)
+
+        def addCompositeToGroup(self,node):
+
+            return self.app.send_and_receive_command("SG_NODE_ADD_COMPOSITE_TO_GROUP",node=node)
+
+        def subNode(self,parent,index):
+
+            return self.app.send_and_receive_command("SG_NODE_SUBNODE",parent=parent,index=index)
+
+        def subNodeByName(self,parent,name):
+
+            return self.app.send_and_receive_command("SG_NODE_SUBNODE_BY_NAME",parent=parent,name=name)               
+
+        def parentNode(self,node):
+
+            return self.app.send_and_receive_command("SG_NODE_PARENT_NODE",node=node)
+
+        def noNode(self):
+
+            return self.app.send_and_receive_command("SG_NODE_NO_NODE")
+
+        def equals(self,node_a,node_b):
+
+            return self.app.send_and_receive_command("SG_NODE_EQUALS",node1=node_a,node2=node_b)                               
+
+        def getTextAttr(self,node,frame,attr):
+
+            return self.app.send_and_receive_command("SG_NODE_GET_TEXT_ATTR",node=node,frame=frame,attr=attr)
+
+        '''
+        def getAttr(self,node,frame,attr):
+
+            return self.app.send_and_receive_command("SG_NODE_GET_ATTR",node=node,frame=frame,attr=attr)
+        '''
+
+        def getAllAttrNames(self,node):
+
+            return self.app.send_and_receive_command("SG_NODE_GET_ALL_ATTR_NAMES",node=node)
+
+        def getAllAttrKeywords(self,node):
+
+            return self.app.send_and_receive_command("SG_NODE_GET_ALL_ATTR_KEYSWORDS",node=node)
+
+        def linkedColumn(self,node,attr):
+
+            return self.app.send_and_receive_command("SG_NODE_LINKED_COLUMN",node=node,attr=attr)
+
+        def coordX(self,node):
+
+            return self.app.send_and_receive_command("SG_NODE_COORD_X",node=node)
+
+        def coordY(self,node):
+
+            return self.app.send_and_receive_command("SG_NODE_COORD_Y",node=node)
+
+        def coordZ(self,node):
+
+            return self.app.send_and_receive_command("SG_NODE_COORD_Z",node=node)
+
+        def width(self,node):
+
+            return self.app.send_and_receive_command("SG_NODE_WIDTH",node=node)
+
+        def height(self,node):
+
+            return self.app.send_and_receive_command("SG_NODE_HEIGHT",node=node)
+
+        def setCoord(self,node,x,y,z = None):
+
+            return self.app.send_and_receive_command("SG_NODE_SET_COORD",node=node,x=x,y=y,z=z)
+
+        def numberOfInputPorts(self,node):
+
+            return self.app.send_and_receive_command("SG_NODE_NUMBER_OF_INPUT_PORTS",node=node)
+
+        def isLinked(self,node,port):
+
+            return self.app.send_and_receive_command("SG_NODE_IS_LINKED",node=node,port=port)
+
+        def srcNode(self,node,port):
+
+            return self.app.send_and_receive_command("SG_NODE_SRC_NODE",node=node,port=port)
+
+        def flatSrcNode(self,node,port):
+
+            return self.app.send_and_receive_command("SG_NODE_FLAT_SRC_NODE",node=node,port=port)
+
+        def numberOfOutputPorts(self,node):
+
+            return self.app.send_and_receive_command("SG_NODE_NUMBER_OF_OUTPUT_PORTS",node=node)        
+
+        def numberOfOutputLinks(self,node,port):
+
+            return self.app.send_and_receive_command("SG_NODE_NUMBER_OF_OUTPUT_LINKS",node=node,port=port)        
+
+        def dstNode(self,node,port,link):
+
+            return self.app.send_and_receive_command("SG_NODE_DST_NODE",node=node,port=port,link=link)
+
+        def groupAtNetworkBuilding(self,node):
+
+            return self.app.send_and_receive_command("SG_NODE_GROUP_AT_NETWORK_BUILDING",node=node)
+
+        def add(self,parent,name,node_type,x,y,z):
+
+            return self.app.send_and_receive_command("SG_NODE_ADD",parent=parent,name=name,type=node_type,x=x,y=y,z=z)
+
+        def getGroupInputModule(self,parentGroup,name,node_type,x,y,z):
+
+            return self.app.send_and_receive_command("SG_NODE_GET_GROUP_INPUT_MODULE",parentGroup=parentGroup,name=name,type=node_type,x=x,y=y,z=z)
+
 
     def connect(self):
         while not self.is_connected():
