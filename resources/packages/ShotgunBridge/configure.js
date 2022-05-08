@@ -1621,7 +1621,17 @@ function Engine()
         
     }
 
+    self.sg_node_get_group_output_module = function(data){
 
+        var parentGroup = data.parentGroup;
+        var name = data.name;
+        var x = data.x;
+        var y = data.y;
+        var z = data.z;
+
+        return getGroupOutputModule(parentGroup,name,x,y,z);
+
+    }
 
     // ------------------------------------------------------------------------
 
@@ -1683,6 +1693,46 @@ function Engine()
         self.registerCallback("SG_NODE_ADD", self.sg_node_add);
         self.registerCallback("SG_NODE_GET_GROUP_INPUT_MODULE", self.sg_node_get_group_input_module);
 
+
+        self.registerCallback("SG_NODE_GET_GROUP_OUTPUT_MODULE", self.sg_node_get_group_output_module);
+        self.registerCallback("SG_NODE_DELETE_NODE", self.sg_node_delete_node);
+        self.registerCallback("SG_NODE_CREATE_GROUP", self.sg_node_create_group);
+        self.registerCallback("SG_NODE_MOVE_TO_GROUP", self.sg_node_move_to_group);
+        self.registerCallback("SG_NODE_EXPLODE_GROUP", self.sg_node_explode_group);
+        self.registerCallback("SG_NODE_RENAME", self.sg_node_rename);
+        self.registerCallback("SG_NODE_CREATE_DYNAMIC_ATTR", self.sg_node_create_dynamic_attr);
+        self.registerCallback("SG_NODE_REMOVE_DYNAMIC_ATTR", self.sg_node_remove_dynamic_attr);
+        self.registerCallback("SG_NODE_SET_TEXT_ATTR", self.sg_node_set_text_attr);
+        self.registerCallback("SG_NODE_LINK_ATTR", self.sg_node_link_attr);
+        self.registerCallback("SG_NODE_UNLINK_ATTR", self.sg_node_unlink_attr);
+        self.registerCallback("SG_NODE_LINK", self.sg_node_link);
+        self.registerCallback("SG_NODE_UNLINK", self.sg_node_unlink);
+        self.registerCallback("SG_NODE_SET_ENABLE", self.sg_node_set_enable);
+        self.registerCallback("SG_NODE_GET_ENABLE", self.sg_node_get_enable);
+        self.registerCallback("SG_NODE_SET_LOCKED", self.sg_node_set_locked);
+        self.registerCallback("SG_NODE_GET_LOCKED", self.sg_node_get_locked);
+        self.registerCallback("SG_NODE_SET_TIMELINE_TAG", self.sg_node_set_timeline_tag);
+        self.registerCallback("SG_NODE_GET_TIMELINE_TAG", self.sg_node_get_timeline_tag);
+        self.registerCallback("SG_NODE_GET_TIMELINE_TAG_LIST", self.sg_node_get_timeline_tag_list);
+        self.registerCallback("SG_NODE_SET_COLOR", self.sg_node_set_color);
+        self.registerCallback("SG_NODE_RESET_COLOR", self.sg_node_reset_color);
+        self.registerCallback("SG_NODE_GET_COLOR", self.sg_node_get_color);
+        self.registerCallback("SG_NODE_SET_GLOBAL_DISPLAY", self.sg_node_set_global_display);
+        self.registerCallback("SG_NODE_SET_GLOBAL_DISPLAY_ALL", self.sg_node_set_global_display_all);
+        self.registerCallback("SG_NODE_SET_AS_DEFAULT_CAMERA", self.sg_node_set_as_default_camera);
+        self.registerCallback("SG_NODE_GET_DEFAULT_CAMERA", self.sg_node_get_default_camera);
+        self.registerCallback("SG_NODE_GET_MAX_VERSION_NUMBER", self.sg_node_get_max_version_number);
+        self.registerCallback("SG_NODE_GET_VERSION", self.sg_node_get_version);        
+        self.registerCallback("SG_NODE_SET_VERSION", self.sg_node_set_version); 
+        self.registerCallback("SG_NODE_GET_NODES", self.sg_node_get_nodes); 
+        self.registerCallback("SG_NODE_GET_MATRIX", self.sg_node_get_matrix); 
+        self.registerCallback("SG_NODE_GET_PIVOT", self.sg_node_get_pivot); 
+        self.registerCallback("SG_NODE_GET_VERSION", self.sg_node_get_version); 
+        self.registerCallback("SG_NODE_GET_COLOR_OVERRIDE", self.sg_node_get_color_override); 
+        self.registerCallback("SG_NODE_GET_ELEMENT_ID", self.sg_node_get_element_id); 
+        self.registerCallback("SG_NODE_EXPLORE_ELEMENT_SYMBOLS_IN_GROUPS", self.sg_node_explore_element_symbols_in_groups); 
+        self.registerCallback("SG_NODE_SET_SHOW_TIMELINE_THUMBNAILS", self.sg_node_set_show_timeline_thumbnails); 
+        self.registerCallback("SG_NODE_GET_SHOW_TIMELINE_THUMBNAILS", self.sg_node_get_show_timeline_thumbnails);
         self.registerCallback("LOG_INFO",       log_info);
         self.registerCallback("LOG_WARNING",    log_warning);
         self.registerCallback("LOG_DEBUG",      log_debug);

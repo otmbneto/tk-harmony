@@ -224,9 +224,165 @@ class Application(QTcpSocketClient):
 
             return self.app.send_and_receive_command("SG_NODE_ADD",parent=parent,name=name,type=node_type,x=x,y=y,z=z)
 
-        def getGroupInputModule(self,parentGroup,name,node_type,x,y,z):
+        def getGroupInputModule(self,parentGroup,name,x,y,z):
 
-            return self.app.send_and_receive_command("SG_NODE_GET_GROUP_INPUT_MODULE",parentGroup=parentGroup,name=name,type=node_type,x=x,y=y,z=z)
+            return self.app.send_and_receive_command("SG_NODE_GET_GROUP_INPUT_MODULE",parentGroup=parentGroup,name=name,x=x,y=y,z=z)
+
+        def getGroupOutputModule(self,parentGroup,name,x,y,z):
+
+            return self.app.send_and_receive_command("SG_NODE_GET_GROUP_OUTPUT_MODULE",parentGroup=parentGroup,name=name,x=x,y=y,z=z)
+
+        def deleteNode(self,nodePath,deleteTimedValues = False,deleteElements = False):
+
+            return self.app.send_and_receive_command("SG_NODE_DELETE_NODE",nodePath=nodePath,deleteTimedValues=deleteTimedValues, deleteElements=deleteElements)
+
+        def createGroup(self,nodes,groupName):
+
+            return self.app.send_and_receive_command("SG_NODE_CREATE_GROUP",nodes=nodes,groupName=groupName)
+
+        def moveToGroup(self,node,groupName):
+
+            return self.app.send_and_receive_command("SG_NODE_MOVE_TO_GROUP",node=node,groupName=groupName)
+
+        def explodeGroup(self,groupName):
+
+            return self.app.send_and_receive_command("SG_NODE_EXPLODE_GROUP",groupName=groupName)
+
+        def rename(self,node,newName):
+
+            return self.app.send_and_receive_command("SG_NODE_RENAME",node=node,newName=newName)
+
+        def createDynamicAttr(self,node,node_type,attrName,displayName,linkable):
+
+            return self.app.send_and_receive_command("SG_NODE_CREATE_DYNAMIC_ATTR",node=node,type=node_type,attrName=attrName,displayName=displayName,linkable=linkable)
+
+        def removeDynamicAttr(self,node,attrName):
+
+            return self.app.send_and_receive_command("SG_NODE_REMOVE_DYNAMIC_ATTR",node=node,attrName=attrName)
+
+        def setTextAttr(self,node,attrName,atFrame,attrValue):
+
+            return self.app.send_and_receive_command("SG_NODE_SET_TEXT_ATTR",node=node,attrName=attrName,atFrame=atFrame,attrValue=attrValue)
+
+        def linkAttr(self,node,attrName,columnName):
+
+            return self.app.send_and_receive_command("SG_NODE_LINK_ATTR",node=node,attrName=attrName,columnName=columnName)
+
+        def unlinkAttr(self,node,attrName):
+
+            return self.app.send_and_receive_command("SG_NODE_UNLINK_ATTR",node=node,attrName=attrName)
+
+        def link(self,srcNode,srcPort,dstNode,dstPort,mayAddOutputPort=None,mayAddInputPort=None):
+
+            return self.app.send_and_receive_command("SG_NODE_LINK",srcNode=srcNode,srcPort=srcPort,dstNode=dstNode,dstPort=dstPort,mayAddOutputPort=mayAddOutputPort,mayAddInputPort=mayAddInputPort)
+
+        def unlink(self,dstNode,inPort):
+
+            return self.app.send_and_receive_command("SG_NODE_UNLINK",dstNode=dstNode,inPort=inPort)
+
+        def setEnable(self,node,flag):
+
+            return self.app.send_and_receive_command("SG_NODE_SET_ENABLE",node=node,flag=flag)
+
+        def getEnable(self,node):
+
+            return self.app.send_and_receive_command("SG_NODE_GET_ENABLE",node=node)
+
+        def setLocked(self,node,lock):
+
+            return self.app.send_and_receive_command("SG_NODE_SET_LOCKED",node=node,lock=lock)
+
+        def getLocked(self,node):
+
+            return self.app.send_and_receive_command("SG_NODE_GET_LOCKED",node=node)
+
+        def setTimelineTag(self,node,tag):
+
+            return self.app.send_and_receive_command("SG_NODE_SET_TIMELINE_TAG",node=node,tag=tag)
+
+        def getTimelineTag(self,node):
+
+            return self.app.send_and_receive_command("SG_NODE_GET_TIMELINE_TAG",node=node)
+
+        def getTimelineTagList(self,node="Top",node_list=[]):
+
+            return self.app.send_and_receive_command("SG_NODE_GET_TIMELINE_TAG_LIST",node=node,list=node_list)
+
+        def setColor(self,node,color):
+
+            return self.app.send_and_receive_command("SG_NODE_SET_COLOR",node=node,color=color)
+
+        def resetColor(self,node):
+
+            return self.app.send_and_receive_command("SG_NODE_RESET_COLOR",node=node)
+
+        def getColor(self,node):
+
+            return self.app.send_and_receive_command("SG_NODE_GET_COLOR",node=node)
+
+        def setGlobalDisplay(self,node):
+
+            return self.app.send_and_receive_command("SG_NODE_SET_GLOBAL_DISPLAY",node=node)
+
+        def setGlobalDisplayAll(self):
+
+            return self.app.send_and_receive_command("SG_NODE_SET_GLOBAL_DISPLAY_ALL")
+
+        def setAsDefaultCamera(self,node):
+
+            return self.app.send_and_receive_command("SG_NODE_SET_AS_DEFAULT_CAMERA",node=node)
+
+        def getDefaultCamera(self):
+
+            return self.app.send_and_receive_command("SG_NODE_GET_DEFAULT_CAMERA")
+
+        def getCameras(self):
+
+            return self.app.send_and_receive_command("SG_NODE_GET_CAMERAS")
+
+        def getMaxVersionNumber(self,node):
+
+            return self.app.send_and_receive_command("SG_NODE_GET_MAX_VERSION_NUMBER",node=node)
+
+        def getVersion(self,node):
+
+            return self.app.send_and_receive_command("SG_NODE_GET_VERSION",node=node)
+
+        def setVersion(self,node,version):
+
+            return self.app.send_and_receive_command("SG_NODE_SET_VERSION",node=node,version=version)
+
+        def getNodes(self,types):
+
+            return self.app.send_and_receive_command("SG_NODE_GET_NODES",types=types)
+
+        def getMatrix(self,node,frame):
+
+            return self.app.send_and_receive_command("SG_NODE_GET_MATRIX",node=node,frame=frame)
+
+        def getPivot(self,node,frame):
+
+            return self.app.send_and_receive_command("SG_NODE_GET_PIVOT",node=node,frame=frame)
+
+        def getColorOverride(self,node):
+
+            return self.app.send_and_receive_command("SG_NODE_GET_COLOR_OVERRIDE",node=node)
+
+        def getElementId(self,nodeName):
+
+            return self.app.send_and_receive_command("SG_NODE_GET_ELEMENT_ID",nodeName=nodeName)
+
+        def explodeElementSymbolsInGroups(self,element,disableElement,clearExposure,prefix=""):
+
+            return self.app.send_and_receive_command("SG_NODE_EXPLORE_ELEMENT_SYMBOLS_IN_GROUPS",element=element,disableElement=disableElement,clearExposure=clearExposure,prefix=prefix)
+
+        def setShowTimelineThumbnails(self,node,bShow):
+
+            return self.app.send_and_receive_command("SG_NODE_SET_SHOW_TIMELINE_THUMBNAILS",node=node,bShow=bShow)
+
+        def getShowTimelineThumbnails(self,node):
+
+            return self.app.send_and_receive_command("SG_NODE_GET_SHOW_TIMELINE_THUMBNAILS",node=node)
 
 
     def connect(self):
