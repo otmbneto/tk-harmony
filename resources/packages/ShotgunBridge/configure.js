@@ -1629,10 +1629,295 @@ function Engine()
         var y = data.y;
         var z = data.z;
 
-        return getGroupOutputModule(parentGroup,name,x,y,z);
+        return node.getGroupOutputModule(parentGroup,name,x,y,z);
 
     }
 
+    self.sg_node_delete_node = function(data){
+
+        var nodePath = data.nodePath;
+        var deleteTimedValues = data.deleteTimedValues;
+        var deleteElements = data.deleteElements;
+
+        return node.deleteNode(nodePath,deleteTimedValues,deleteElements);
+
+    }
+
+    self.sg_node_create_group = function(data){
+
+        var nodes = data.nodes;
+        var groupName = data.groupName;
+
+        return node.createGroup(nodes,groupName);
+    }
+
+    self.sg_node_move_to_group = function(data){
+
+        var n = data.node;
+        var groupName = data.groupName;
+
+        return node.moveToGroup(n,groupName);
+
+    }
+
+    self.sg_node_explode_group = function(data){
+
+        var groupNode = data.groupNode;
+        return node.explodeNode(groupNode);
+    }
+
+    self.sg_node_rename = function(data){
+
+        var n = data.node;
+        var newName = data.newName;
+
+        return node.rename(n,newName);
+
+    }
+
+    self.sg_node_create_dynamic_attr = function(data){
+
+        var n = data.node;
+        var type = node.type;
+        var attrName = node.attrName;
+        var displayName = node.displayName;
+        var linkable = node.linkable;
+
+        return node.createDynamicAttr(n,type,attrName,displayName,linkable);
+
+    }
+
+    self.sg_node_remove_dynamic_attr = function(data){
+
+        var n = data.node;
+        var attrName = node.attrName;
+
+        return node.removeDynamicAttr(n,attrName);
+    }
+
+    self sg_node_set_text_attr = function(data){
+
+        var n = data.node; 
+        var attrName = data.attrName; 
+        var atFrame = data.atFrame; 
+        var attrValue = data.attrValue;
+
+        return node.setTextAttr(n,attrName,atFrame,attrValue);
+
+    }
+
+    self.sg_node_link_attr = function(data){
+
+        var n = data.node; 
+        var attrName = data.attrName; 
+        var columnName = data.columnName;
+
+        return node.linkAttr(n,attrName,columnName);
+    }
+
+    self.sg_node_unlink_attr = function(data){
+
+        var n = data.node; 
+        var attrName = data.attrName;
+
+        return node.unlinkAttr(n,attrName);
+    }
+
+    self.sg_node_link = function(data){
+
+        var srcNode = data.srcNode;
+        var srcPort = data.srcPort;
+        var dstNode = data.dstNode;
+        var dstPort = data.dstPort;
+        var mayAddOutputPort = data.mayAddOutputPort;
+        var mayAddInputPort = data.mayAddInputPort;
+
+        return node.link(srcNode,srcPort,dstPort,dstPort,mayAddOutputPort,mayAddInputPort);
+    }
+
+    self.sg_node_unlink = function(data){
+
+        var dstNode = data.dstNode;
+        var inPort = data.inPort;
+
+        return node.link(dstPort,inPort);
+    }
+
+    self.sg_node_set_enable = function(data){
+
+        var n = data.node;
+        var flag = data.flag;
+        return node.setEnable(n,flag);
+    }
+
+    self.sg_node_get_enable = function(data){
+
+        var n = data.node;
+        return node.getEnabled(n);
+    }
+
+    self.sg_node_set_locked = function(data){
+
+        var n = data.node;
+        var lock = data.lock;
+        return node.setLocked(n,lock);
+
+    }
+
+    self.sg_node_get_locked = function(data){
+
+        var n = data.node;
+        return node.getLocked(n);
+
+    }
+
+    self.sg_node_set_timeline_tag = function(data){
+
+        var n = data.node;
+        var tag = data.tag;
+        return node.setTimelineTag(n,tag);
+    }
+
+    self.sg_node_get_timeline_tag = function(data){
+
+        var n = data.node;
+        return node.getTimelineTag(n);
+    }
+
+    self.sg_node_get_timeline_tag_list = function(data){
+
+        var n = data.node;
+        var list = data.list;
+        return node.getTimelineTagList(n,list);
+    }
+
+    self.sg_node_set_color = function(data){
+
+        var n = data.node;
+        var color = data.color;
+
+        return node.setColor(n,color);
+    }
+
+    self.sg_node_reset_color = function(data){
+
+        var n = data.node;
+        return node.resetColor(n);
+    }
+
+    self.sg_node_get_color = function(data){
+
+        var n = data.node;
+        return node.getColor(n);
+
+    }
+
+    self.sg_node_set_as_global_display = function(data){
+
+        var n = data.node;
+        return node.setAsGlobalDisplay(n)
+    }
+
+    self.sg_node_set_global_to_display_all = function(data){
+
+        return node.setGlobalToDisplayAll();
+    }
+
+    self.sg_node_set_as_default_camera = function(data){
+
+        var n = data.node;
+        return node.setAsDefaultCamera(n);
+    }
+
+    self.sg_node_get_default_camera = function(data){
+
+        return node.getDefaultCamera();
+    }
+
+    self.sg_node_get_cameras = function(data){
+
+        return node.getCameras();
+
+    }
+
+    self.sg_node_get_max_version_number = function(data){
+
+        var n = data.node;
+        return node.getMaxVersionNumber(n);
+
+    }
+
+    self.sg_node_get_version = function(data){
+
+        var n = data.node;
+        return node.getVersion(n);
+
+    }
+
+    self.sg_node_set_version = function(data){
+
+        var n = data.node;
+        var version = data.version;
+        return node.setVersion(n,version);
+    }
+
+    self.sg_node_get_nodes = function(data){
+
+        var types = data.types;
+        return node.getNodes(types);
+    }
+
+    self.sg_node_get_matrix = function(data){
+
+        var n = data.node;
+        var frame = data.frame;
+        return node.getMatrix(n,frame);
+    }
+
+    self.sg_node_get_pivot = function(data){
+
+        var n = data.node;
+        var frame = data.frame;
+
+        return node.getPivot(n,frame);
+    }
+
+    self.sg_node_get_color_override = function(data){
+
+        var n = data.node;
+
+        return node.getColorOverride(n);
+    }
+
+    self.sg_node_get_element_id = function(data){
+
+        var nodeName = data.nodeName;
+        return getElementId(nodeName);
+    }
+
+    self.sg_node_explode_element_symbols_in_groups = function(data){
+
+        var element = data.element;
+        var disableElement = data.disableElement;
+        var clearExposure = data.clearExposure;
+        var prefix = data.prefix;
+
+        return node.explodeElementSymbolsInGroups(element,disableElement,clearExposure,prefix);
+    }
+
+    self.sg_node_set_show_timeline_thumbnails = function(data){
+
+        var n = data.node;
+        var bShow = data.bShow;
+
+        return node.setShowTimelineThumbnails(n,bShow);
+    }
+
+    self.sg_node_get_show_timeline_thumbnails = function(data){
+
+        var n = data.node;
+        return node.getShowTimelineThumbnails(n); 
+    }
     // ------------------------------------------------------------------------
 
     self.registerCallback = function(command, callback)
@@ -1692,8 +1977,6 @@ function Engine()
         self.registerCallback("SG_NODE_GROUP_AT_NETWORK_BUILDING",self.sg_node_group_at_network_building);
         self.registerCallback("SG_NODE_ADD", self.sg_node_add);
         self.registerCallback("SG_NODE_GET_GROUP_INPUT_MODULE", self.sg_node_get_group_input_module);
-
-
         self.registerCallback("SG_NODE_GET_GROUP_OUTPUT_MODULE", self.sg_node_get_group_output_module);
         self.registerCallback("SG_NODE_DELETE_NODE", self.sg_node_delete_node);
         self.registerCallback("SG_NODE_CREATE_GROUP", self.sg_node_create_group);
@@ -1717,10 +2000,11 @@ function Engine()
         self.registerCallback("SG_NODE_SET_COLOR", self.sg_node_set_color);
         self.registerCallback("SG_NODE_RESET_COLOR", self.sg_node_reset_color);
         self.registerCallback("SG_NODE_GET_COLOR", self.sg_node_get_color);
-        self.registerCallback("SG_NODE_SET_GLOBAL_DISPLAY", self.sg_node_set_global_display);
-        self.registerCallback("SG_NODE_SET_GLOBAL_DISPLAY_ALL", self.sg_node_set_global_display_all);
+        self.registerCallback("SG_NODE_SET_AS_GLOBAL_DISPLAY", self.sg_node_set_as_global_display);
+        self.registerCallback("SG_NODE_SET_GLOBAL_TO_DISPLAY_ALL", self.sg_node_set_global_to_display_all);
         self.registerCallback("SG_NODE_SET_AS_DEFAULT_CAMERA", self.sg_node_set_as_default_camera);
         self.registerCallback("SG_NODE_GET_DEFAULT_CAMERA", self.sg_node_get_default_camera);
+        self.registerCallback("SG_NODE_GET_CAMERAS", self.sg_node_get_cameras);
         self.registerCallback("SG_NODE_GET_MAX_VERSION_NUMBER", self.sg_node_get_max_version_number);
         self.registerCallback("SG_NODE_GET_VERSION", self.sg_node_get_version);        
         self.registerCallback("SG_NODE_SET_VERSION", self.sg_node_set_version); 
@@ -1730,7 +2014,7 @@ function Engine()
         self.registerCallback("SG_NODE_GET_VERSION", self.sg_node_get_version); 
         self.registerCallback("SG_NODE_GET_COLOR_OVERRIDE", self.sg_node_get_color_override); 
         self.registerCallback("SG_NODE_GET_ELEMENT_ID", self.sg_node_get_element_id); 
-        self.registerCallback("SG_NODE_EXPLORE_ELEMENT_SYMBOLS_IN_GROUPS", self.sg_node_explore_element_symbols_in_groups); 
+        self.registerCallback("SG_NODE_EXPLODE_ELEMENT_SYMBOLS_IN_GROUPS", self.sg_node_explode_element_symbols_in_groups); 
         self.registerCallback("SG_NODE_SET_SHOW_TIMELINE_THUMBNAILS", self.sg_node_set_show_timeline_thumbnails); 
         self.registerCallback("SG_NODE_GET_SHOW_TIMELINE_THUMBNAILS", self.sg_node_get_show_timeline_thumbnails);
         self.registerCallback("LOG_INFO",       log_info);
